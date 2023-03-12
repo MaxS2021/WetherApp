@@ -9,13 +9,25 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.fragment.app.FragmentActivity
 import com.example.weatherapp.R
+import com.example.weatherapp.adapters.VpAdapter
 import com.example.weatherapp.databinding.FragmentMainBinding
+import com.google.android.material.tabs.TabLayoutMediator
 
 
 class MainFragment : Fragment() {
+
     private lateinit var pLauncher: ActivityResultLauncher<String>
     private lateinit var binding: FragmentMainBinding
+    private  val listFr = listOf(
+        HoursFragment.newInstance(),
+        DaysFragment.newInstance()
+    )
+    private  val listFrName = listOf(
+        "HOURS",
+        "DAYS"
+    )
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -28,6 +40,17 @@ class MainFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         checkPermission()
+        init()
+
+    }
+
+    private fun init() {
+        val adapter = VpAdapter(activity as FragmentActivity, listFr)
+        binding.vp2.adapter = adapter
+        TabLayoutMediator(binding.tabLayout, binding.vp2) {
+                tab, pos ->
+            tab.text = listFrName[pos]
+        }.attach()
     }
 
     private fun permissionListener() {
